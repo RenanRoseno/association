@@ -1,11 +1,17 @@
 package com.queonetics.association.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
 @Table(name = "tb_associations")
+@Getter
+@Setter
 public class Association {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,7 +21,9 @@ public class Association {
 
     private String registration;
 
-    private Date startDate;
+    private LocalDateTime startDate;
 
-    private Date endDate;
+    private LocalDateTime endDate;
 }
+
+    //"startDate": "2024-07-27T11:34:05"

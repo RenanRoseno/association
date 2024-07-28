@@ -3,6 +3,7 @@ package com.queonetics.association.services;
 import com.queonetics.association.models.Association;
 import com.queonetics.association.models.dto.AssociationDTO;
 import com.queonetics.association.models.dto.StatusDTO;
+import com.queonetics.association.models.dto.VehicleDTO;
 import com.queonetics.association.models.enums.EnumStatus;
 import com.queonetics.association.repositories.AssociationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,12 @@ public class AssociationService {
     @Autowired
     AssociationRepository associationRepository;
 
+    @Autowired
+    VehicleService vehicleService;
+
     public Long loginAssociation(AssociationDTO associationDTO) {
         // Verificar no outro servico existencia de veiculo e condutor
+        this.validateVehicle(associationDTO.getPlate());
         Association associationSaved = this.associationRepository.save(associationDTO.toEntity());
         return associationSaved.getId();
     }
@@ -62,5 +67,11 @@ public class AssociationService {
         if(association.getStartDate().isAfter(date)){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A data do fim da associação não pode ser maior que a data de início.");
         }
+    }
+
+    private void validateVehicle(String plate){
+        VehicleDTO vehicleDTO = this.vehicleService.getVehicleByPlate(plate);
+        if(vehicleDTO == null)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O veículo informado não existe.");
     }
 }
